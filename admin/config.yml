@@ -1,0 +1,75 @@
+backend:
+  name: github
+  repo: malachymcavoy/mcavoysearch  # ← Change this to your GitHub username
+  branch: main
+
+# Where job JSON files are stored in your repo
+media_folder: "assets"
+
+collections:
+  - name: "jobs"
+    label: "Job Postings"
+    label_singular: "Job Posting"
+    folder: "_jobs"
+    create: true
+    delete: true
+    extension: "json"
+    format: "json"
+    identifier_field: "title"
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - label: "Job Title"
+        name: "title"
+        widget: "string"
+        hint: "e.g. Senior Electrical Engineer"
+
+      - label: "Engineering Discipline"
+        name: "discipline"
+        widget: "select"
+        options:
+          - "Electrical"
+          - "Mechanical"
+          - "Software"
+          - "Firmware"
+          - "Industrial"
+          - "RF Engineering"
+          - "Systems Engineering"
+          - "Embedded Systems"
+          - "Hardware Design"
+          - "Signal Processing"
+          - "Other"
+
+      - label: "Employment Type"
+        name: "type"
+        widget: "select"
+        default: "Full-Time"
+        options:
+          - "Full-Time"
+          - "Contract"
+          - "Contract-to-Hire"
+          - "Part-Time"
+
+      - label: "Location"
+        name: "location"
+        widget: "string"
+        hint: "e.g. Dallas, TX or Remote – North America"
+
+      - label: "Date Posted"
+        name: "date"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        default: ""
+
+      - label: "Job Description"
+        name: "description"
+        widget: "text"
+        hint: "Brief summary of the role and requirements. Keep it to 2–4 sentences."
+
+      - label: "Active"
+        name: "active"
+        widget: "boolean"
+        default: true
+        hint: "Uncheck to hide this posting without deleting it."
