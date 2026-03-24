@@ -4,3 +4,553 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>McAvoy Consulting – Technical Recruitment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:   #0d1b2a;
+      --slate:  #1e3a5f;
+      --gold:   #b8974a;
+      --cream:  #f5f0e8;
+      --white:  #ffffff;
+      --text:   #2c2c2c;
+      --muted:  #6b7280;
+      --border: #ddd5c8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5vw;
+      height: 68px;
+      box-shadow: 0 2px 20px rgba(0,0,0,.35);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: .03em;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,.78);
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 400;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding-bottom: 3px;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); border-color: var(--gold); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); transition: .3s; }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: var(--navy);
+      padding: 1.5rem 5vw 2rem;
+      z-index: 99;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a {
+      display: block;
+      color: rgba(255,255,255,.85);
+      text-decoration: none;
+      padding: .65rem 0;
+      font-size: 1rem;
+      letter-spacing: .04em;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ─── PAGES ─── */
+    .page { display: none; min-height: 100vh; padding-top: 68px; }
+    .page.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .page.active > * { animation: fadeUp .45s ease both; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      background: var(--navy);
+      min-height: 78vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 65% 50%, rgba(30,58,95,.55) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 80% at 20% 80%, rgba(184,151,74,.08) 0%, transparent 60%);
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-content { position: relative; z-index: 2; padding: 7vw 5vw 7vw 8vw; max-width: 680px; }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: .75rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(184,151,74,.4);
+      padding: .35rem .9rem; border-radius: 2px; margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-weight: 300; line-height: 1.08;
+      color: var(--white); letter-spacing: -.01em; margin-bottom: 1.5rem;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+
+    .hero-sub { font-size: 1.05rem; color: rgba(255,255,255,.65); font-weight: 300; max-width: 440px; margin-bottom: 2.8rem; line-height: 1.75; }
+    .hero-since { font-family: 'Cormorant Garamond', serif; font-size: .95rem; font-style: italic; color: rgba(255,255,255,.4); margin-bottom: 2.8rem; }
+
+    .btn-primary {
+      display: inline-block; background: var(--gold); color: var(--navy);
+      text-decoration: none; font-size: .82rem; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: .9rem 2.2rem; border-radius: 2px; border: none; cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: #caa85c; transform: translateY(-1px); }
+
+    .btn-outline {
+      display: inline-block; background: transparent;
+      color: var(--gold); border: 1px solid var(--gold);
+      text-decoration: none; font-size: .82rem; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: .9rem 2.2rem; border-radius: 2px; cursor: pointer;
+      transition: background .2s, color .2s;
+      margin-left: 1rem;
+    }
+    .btn-outline:hover { background: var(--gold); color: var(--navy); }
+
+    .hero-accent {
+      position: absolute; right: 5vw; top: 50%; transform: translateY(-50%);
+      z-index: 2; text-align: right; opacity: .12; pointer-events: none;
+    }
+    .hero-accent-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(6rem, 14vw, 14rem); font-weight: 300;
+      color: var(--white); line-height: 1; letter-spacing: -.04em;
+    }
+
+    /* ─── SERVICES SECTION ─── */
+    .services-section { padding: 7rem 5vw; background: var(--cream); }
+
+    .section-label { font-size: .72rem; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 400; color: var(--navy); line-height: 1.15; margin-bottom: 3.5rem; max-width: 560px; }
+
+    .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; max-width: 960px; }
+
+    .service-card { background: var(--white); padding: 2.5rem 2.8rem; position: relative; overflow: hidden; }
+    .service-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--gold); transition: height .4s ease; }
+    .service-card:hover::before { height: 100%; }
+    .service-number { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: rgba(13,27,42,.06); line-height: 1; margin-bottom: .5rem; }
+    .service-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; font-weight: 600; color: var(--navy); margin-bottom: .8rem; }
+    .service-card p { font-size: .92rem; color: var(--muted); line-height: 1.7; }
+
+    /* ─── CLIENTS ─── */
+    .clients-section { padding: 5rem 5vw; background: var(--navy); }
+    .clients-section .section-label { color: rgba(184,151,74,.8); }
+    .clients-section .section-title { color: var(--white); }
+    .clients-list { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; align-items: center; }
+    .client-name { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; color: rgba(255,255,255,.4); letter-spacing: .02em; transition: color .2s; }
+    .client-name:hover { color: var(--gold); }
+    .client-sep { color: rgba(255,255,255,.15); font-size: .7rem; }
+
+    /* ─── ABOUT ─── */
+    .page-hero {
+      background: var(--navy); padding: 6rem 5vw 5rem 8vw;
+      position: relative; overflow: hidden;
+    }
+    .page-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; color: var(--white); margin-bottom: 1.5rem; line-height: 1.1; }
+    .page-hero p { color: rgba(255,255,255,.6); font-size: 1.05rem; max-width: 580px; font-weight: 300; }
+
+    .about-body { padding: 6rem 5vw; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .about-text h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 400; color: var(--navy); margin-bottom: 1.5rem; line-height: 1.2; }
+    .about-text p { color: var(--muted); font-size: .97rem; margin-bottom: 1.2rem; }
+    .about-stats { display: flex; flex-direction: column; gap: 2rem; }
+    .stat-item { border-left: 3px solid var(--gold); padding-left: 1.5rem; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 3.2rem; font-weight: 300; color: var(--navy); line-height: 1; }
+    .stat-label { font-size: .82rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; }
+
+    .disciplines { padding: 0 5vw 6rem; max-width: 1100px; margin: 0 auto; }
+    .disciplines h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--navy); margin-bottom: 2rem; }
+    .discipline-tags { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .tag { background: var(--cream); border: 1px solid var(--border); color: var(--navy); font-size: .82rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; padding: .55rem 1.2rem; border-radius: 2px; }
+
+    /* ─── JOBS PAGE ─── */
+    .jobs-body { padding: 5rem 5vw; max-width: 900px; margin: 0 auto; }
+
+    .jobs-filter {
+      display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: var(--cream); border: 1px solid var(--border);
+      color: var(--navy); font-size: .8rem; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .5rem 1.2rem; border-radius: 2px; cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+    .jobs-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .job-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 3px; padding: 2rem 2.5rem;
+      position: relative; overflow: hidden;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .job-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold); }
+    .job-card:hover { border-color: var(--gold); box-shadow: 0 4px 24px rgba(0,0,0,.07); }
+
+    .job-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .job-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--navy); }
+    .job-type {
+      display: inline-block; font-size: .7rem; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      background: var(--cream); border: 1px solid var(--border);
+      color: var(--muted); padding: .3rem .8rem; border-radius: 2px;
+      white-space: nowrap;
+    }
+    .job-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .job-meta-item { font-size: .83rem; color: var(--muted); display: flex; align-items: center; gap: .4rem; }
+    .job-meta-item::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+    .job-desc { font-size: .93rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+    .job-apply { font-size: .78rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(184,151,74,.3); padding-bottom: 2px; transition: border-color .2s; }
+    .job-apply:hover { border-color: var(--gold); }
+
+    .jobs-empty {
+      text-align: center; padding: 5rem 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-style: italic; color: var(--muted);
+    }
+
+    .jobs-loading {
+      text-align: center; padding: 4rem; color: var(--muted);
+      font-size: .9rem; letter-spacing: .05em;
+    }
+
+    /* ─── CONTACT ─── */
+    .contact-body { padding: 6rem 5vw; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: start; }
+    .contact-form-wrap h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 400; color: var(--navy); margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.4rem; }
+    .form-group label { display: block; font-size: .75rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+    .form-group input, .form-group textarea { width: 100%; border: 1px solid var(--border); background: var(--cream); padding: .85rem 1rem; font-family: 'DM Sans', sans-serif; font-size: .93rem; color: var(--text); border-radius: 2px; outline: none; transition: border-color .2s; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--gold); background: var(--white); }
+    .form-group textarea { height: 130px; resize: vertical; }
+    .form-note { font-size: .75rem; color: var(--muted); margin-top: .5rem; }
+    .form-success { display: none; background: #e8f5e9; border: 1px solid #a5d6a7; color: #2e7d32; padding: 1rem 1.2rem; border-radius: 2px; font-size: .9rem; margin-top: 1rem; }
+
+    .contact-info h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 400; color: var(--navy); margin-bottom: 2rem; }
+    .info-block { margin-bottom: 2.2rem; }
+    .info-block-label { font-size: .72rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: .5rem; }
+    .info-block p, .info-block a { font-size: .97rem; color: var(--text); text-decoration: none; display: block; line-height: 1.6; }
+    .info-block a:hover { color: var(--gold); }
+    .hours-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .hours-table td { padding: .45rem 0; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .hours-table td:first-child { color: var(--text); font-weight: 500; }
+    .hours-table tr:last-child td { border-bottom: none; }
+
+    /* ─── FOOTER ─── */
+    footer { background: var(--navy); padding: 2.5rem 5vw; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06); }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--white); }
+    .footer-logo span { color: var(--gold); }
+    footer p { font-size: .78rem; color: rgba(255,255,255,.35); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .services-grid { grid-template-columns: 1fr; }
+      .about-body { grid-template-columns: 1fr; gap: 3rem; }
+      .contact-body { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-accent { display: none; }
+      .hero-content { padding: 5rem 5vw; }
+      .btn-outline { margin-left: 0; margin-top: .8rem; display: block; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home')">McAvoy <span>Consulting</span></a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a href="#" onclick="showPage('jobs')" id="nav-jobs">Open Positions</a></li>
+    <li><a href="#" onclick="showPage('about')" id="nav-about">About Us</a></li>
+    <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact Us</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMobile()" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="showPage('home');toggleMobile()">Home</a>
+  <a href="#" onclick="showPage('jobs');toggleMobile()">Open Positions</a>
+  <a href="#" onclick="showPage('about');toggleMobile()">About Us</a>
+  <a href="#" onclick="showPage('contact');toggleMobile()">Contact Us</a>
+</div>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-eyebrow">Technical Recruitment</span>
+      <h1>Placing Engineers<br>Who <em>Move Industries</em></h1>
+      <p class="hero-sub">Handling all engineering disciplines across North America since 1990. From startups to Fortune 100 companies — one hire or an entire team.</p>
+      <p class="hero-since">Trusted partner to leading technology firms for over three decades.</p>
+      <a href="#" class="btn-primary" onclick="showPage('contact')">Get In Touch</a>
+      <a href="#" class="btn-outline" onclick="showPage('jobs')">View Open Roles</a>
+    </div>
+    <div class="hero-accent"><div class="hero-accent-text">30+</div></div>
+  </section>
+
+  <section class="services-section">
+    <p class="section-label">What We Do</p>
+    <h2 class="section-title">Engineering Recruitment<br>Done with Precision</h2>
+    <div class="services-grid">
+      <div class="service-card"><div class="service-number">01</div><h3>Direct Placement</h3><p>We directly vet and match highly qualified engineers to permanent roles, ensuring the right technical fit from the first conversation.</p></div>
+      <div class="service-card"><div class="service-number">02</div><h3>Team Staffing</h3><p>Building full engineering teams for tech startups to Fortune 100 companies — on time and with the precision your product demands.</p></div>
+      <div class="service-card"><div class="service-number">03</div><h3>Technical Vetting</h3><p>Working strictly in the engineering environment allows us to understand technical requirements deeply and screen candidates others can't.</p></div>
+      <div class="service-card"><div class="service-number">04</div><h3>North American Coverage</h3><p>Active recruiting networks spanning the United States and Canada, reaching passive candidates in niche engineering disciplines.</p></div>
+    </div>
+  </section>
+
+  <section class="clients-section">
+    <p class="section-label">Trusted By</p>
+    <h2 class="section-title" style="font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:2.5rem;">Industry Leaders We've Placed With</h2>
+    <div class="clients-list">
+      <span class="client-name">Microchip</span><span class="client-sep">·</span>
+      <span class="client-name">Danaher Corp</span><span class="client-sep">·</span>
+      <span class="client-name">Zebra Technologies</span><span class="client-sep">·</span>
+      <span class="client-name">Motorola</span><span class="client-sep">·</span>
+      <span class="client-name">Siemens</span><span class="client-sep">·</span>
+      <span class="client-name">Fujitsu Network Communications</span><span class="client-sep">·</span>
+      <span class="client-name">Leviton Corp</span><span class="client-sep">·</span>
+      <span class="client-name">Cox Automotive</span><span class="client-sep">·</span>
+      <span class="client-name">Data Device Corp</span><span class="client-sep">·</span>
+      <span class="client-name">Tyco Electronics</span><span class="client-sep">·</span>
+      <span class="client-name">Hughes Networks</span>
+    </div>
+  </section>
+</div>
+
+<!-- JOBS -->
+<div class="page" id="page-jobs">
+  <section class="page-hero"><div class="page-hero-inner">
+    <p class="section-label" style="margin-bottom:.8rem;">Careers</p>
+    <h1>Open Positions</h1>
+    <p>Engineering roles across North America. All positions are placed directly by McAvoy Consulting.</p>
+  </div></section>
+  <div class="jobs-body">
+    <div class="jobs-filter" id="jobsFilter"><button class="filter-btn active" onclick="filterJobs('all', this)">All Roles</button></div>
+    <div class="jobs-list" id="jobsList"><div class="jobs-loading">Loading positions…</div></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <section class="page-hero"><div class="page-hero-inner">
+    <p class="section-label" style="margin-bottom:.8rem;">About McAvoy Consulting</p>
+    <h1>Three Decades of<br>Engineering Expertise</h1>
+    <p>A specialist technical recruiting firm with a proven record of connecting exceptional engineers with industry-leading companies across North America.</p>
+  </div></section>
+  <div class="about-body">
+    <div class="about-text">
+      <h2>Focused Entirely on the Engineering Environment</h2>
+      <p>Since 1990, McAvoy Consulting has operated exclusively within the engineering space. That singular focus is our competitive advantage — it means we speak your technical language and understand what "right fit" actually looks like for a hardware or firmware team.</p>
+      <p>We serve the hiring needs of tech startups to Fortune 100 companies, from a single critical hire to the full staffing of engineering teams. Our direct-vetting approach means we don't send you a pile of resumes — we send you the right people.</p>
+      <p>Over three decades, we've built trusted relationships with leaders across Electrical, Mechanical, Software/Firmware, Industrial, and RF engineering disciplines, among others.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-item"><div class="stat-num">1990</div><div class="stat-label">Year Founded</div></div>
+      <div class="stat-item"><div class="stat-num">30+</div><div class="stat-label">Years of Expertise</div></div>
+      <div class="stat-item"><div class="stat-num">F100</div><div class="stat-label">Clients Up To Fortune 100</div></div>
+      <div class="stat-item"><div class="stat-num">N.A.</div><div class="stat-label">North American Coverage</div></div>
+    </div>
+  </div>
+  <div class="disciplines">
+    <h3>Engineering Disciplines We Place</h3>
+    <div class="discipline-tags">
+      <span class="tag">Electrical</span><span class="tag">Mechanical</span><span class="tag">Software</span><span class="tag">Firmware</span><span class="tag">Industrial</span><span class="tag">RF Engineering</span><span class="tag">Systems Engineering</span><span class="tag">Embedded Systems</span><span class="tag">Hardware Design</span><span class="tag">Signal Processing</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="page" id="page-contact">
+  <section class="page-hero"><div class="page-hero-inner">
+    <p class="section-label" style="margin-bottom:.8rem;">Get In Touch</p>
+    <h1>Let's Talk About<br>Your Next Hire</h1>
+    <p>Reach out directly or use the form below. We respond promptly.</p>
+  </div></section>
+  <div class="contact-body">
+    <div class="contact-form-wrap">
+      <h2>Drop Us a Line</h2>
+      <div class="form-group"><label>Your Name</label><input type="text" id="fname" placeholder="Full name" /></div>
+      <div class="form-group"><label>Email Address *</label><input type="email" id="femail" placeholder="your@email.com" /></div>
+      <div class="form-group"><label>Message</label><textarea id="fmsg" placeholder="Tell us about the position or team you're looking to fill…"></textarea></div>
+      <button class="btn-primary" onclick="handleSubmit()">Send Message</button>
+      <div class="form-success" id="formSuccess">✓ Thanks! Your message has been sent. We'll be in touch soon.</div>
+      <p class="form-note" style="margin-top:1.2rem;">This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.</p>
+    </div>
+    <div class="contact-info">
+      <h2>Contact Details</h2>
+      <div class="info-block"><div class="info-block-label">Email</div><a href="mailto:chris@mcavoysearch.com">chris@mcavoysearch.com</a></div>
+      <div class="info-block"><div class="info-block-label">Phone</div><a href="tel:6312657878">Office: (631) 265-7878</a></div>
+      <div class="info-block"><div class="info-block-label">Address</div><p>872 Jericho Turnpike</p><p>St. James, NY</p></div>
+      <div class="info-block"><div class="info-block-label">Business Hours</div>
+        <table class="hours-table">
+          <tr><td>Monday – Friday</td><td>9:00 AM – 5:00 PM</td></tr>
+          <tr><td>Saturday</td><td>Closed</td></tr>
+          <tr><td>Sunday</td><td>Closed</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">McAvoy <span>Consulting</span></div>
+  <p>Copyright © 2025 McAvoy Consulting – All Rights Reserved.</p>
+</footer>
+
+<script>
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.getElementById('nav-' + name).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (name === 'jobs') loadJobs();
+    return false;
+  }
+  function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('mobileMenu');
+    const ham = document.getElementById('hamburger');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !ham.contains(e.target)) menu.classList.remove('open');
+  });
+  function handleSubmit() {
+    const email = document.getElementById('femail').value;
+    if (!email) { alert('Please enter your email address.'); return; }
+    document.getElementById('formSuccess').style.display = 'block';
+    document.getElementById('fname').value = '';
+    document.getElementById('femail').value = '';
+    document.getElementById('fmsg').value = '';
+  }
+  let allJobs = [], activeFilter = 'all';
+  async function loadJobs() {
+    const list = document.getElementById('jobsList');
+    list.innerHTML = '<div class="jobs-loading">Loading positions…</div>';
+    try {
+      const res = await fetch('/_jobs/manifest.json');
+      if (!res.ok) throw new Error('no manifest');
+      const manifest = await res.json();
+      if (!manifest.jobs || manifest.jobs.length === 0) { showEmpty(); return; }
+      const fetches = manifest.jobs.map(f => fetch('/_jobs/' + f).then(r => r.json()));
+      allJobs = await Promise.all(fetches);
+      allJobs.sort((a, b) => new Date(b.date) - new Date(a.date));
+      buildFilters(); renderJobs(allJobs);
+    } catch (e) { showEmpty(); }
+  }
+  function buildFilters() {
+    const disciplines = [...new Set(allJobs.map(j => j.discipline).filter(Boolean))];
+    const container = document.getElementById('jobsFilter');
+    container.innerHTML = '<button class="filter-btn active" onclick="filterJobs(\'all\', this)">All Roles</button>';
+    disciplines.forEach(d => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn'; btn.textContent = d;
+      btn.onclick = function() { filterJobs(d, this); };
+      container.appendChild(btn);
+    });
+  }
+  function filterJobs(filter, btn) {
+    activeFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = filter === 'all' ? allJobs : allJobs.filter(j => j.discipline === filter);
+    renderJobs(filtered);
+  }
+  function renderJobs(jobs) {
+    const list = document.getElementById('jobsList');
+    if (jobs.length === 0) { showEmpty(); return; }
+    list.innerHTML = jobs.map(job => `
+      <div class="job-card">
+        <div class="job-card-header">
+          <div class="job-title">${job.title}</div>
+          <span class="job-type">${job.type || 'Full-Time'}</span>
+        </div>
+        <div class="job-meta">
+          ${job.location ? `<span class="job-meta-item">${job.location}</span>` : ''}
+          ${job.discipline ? `<span class="job-meta-item">${job.discipline}</span>` : ''}
+          ${job.date ? `<span class="job-meta-item">Posted ${formatDate(job.date)}</span>` : ''}
+        </div>
+        <p class="job-desc">${job.description}</p>
+        <a href="mailto:chris@mcavoysearch.com?subject=Application: ${encodeURIComponent(job.title)}" class="job-apply">Apply for This Role →</a>
+      </div>
+    `).join('');
+  }
+  function showEmpty() {
+    document.getElementById('jobsList').innerHTML = '<div class="jobs-empty">No open positions at this time.<br>Check back soon or reach out directly.</div>';
+    document.getElementById('jobsFilter').innerHTML = '';
+  }
+  function formatDate(dateStr) {
+    try { return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+    catch { return dateStr; }
+  }
+</script>
+</body>
+</html>
